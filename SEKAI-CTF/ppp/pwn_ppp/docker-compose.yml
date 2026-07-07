@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  pwn-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    container_name: pwn_ppp_debug
+    privileged: true
+    pid: "host"
+    network_mode: "host"
+    security_opt:
+      - seccomp:unconfined
+
