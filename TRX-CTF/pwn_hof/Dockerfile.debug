@@ -1,0 +1,21 @@
+FROM cybersecnatlab/challenge-jail@sha256:8f6f5cd84a2014f6123d2ae51c19a963c173140c1cba262e4f3fb9ef1c570c74 AS jail
+
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y gdb gdbserver socat && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy the challenge binary
+COPY chall /home/user/chall
+RUN chmod +x /home/user/chall
+
+# Copy the libc and ld from the jail image (exact match)
+COPY --from=jail /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu/libc.so.6
+COPY --from=jail /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
+
+WORKDIR /home/user
+
+EXPOSE 1337 9999
