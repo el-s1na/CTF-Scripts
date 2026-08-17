@@ -1,0 +1,7 @@
+services:
+  alloc-101:
+    build: .
+    ports:
+      - ${PORT:-9999}:9999
+    init: true
+    restart: unless-stopped
